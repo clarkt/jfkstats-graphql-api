@@ -11,8 +11,10 @@ mongoose.connection.once('open', () => {
   console.log('connected to the database');
 });
 
+const PORT = process.env.PORT || 1337;
+
 const server = hapi.server({
-  port: 1337,
+  port: PORT,
   host: 'localhost'
 });
 
