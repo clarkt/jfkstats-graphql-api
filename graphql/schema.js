@@ -1,5 +1,6 @@
 const graphql = require('graphql');
 const PlayerType = require('./PlayerType')
+// const Player = require('./../models/Player');
 
 const {
   GraphQLObjectType,
@@ -14,7 +15,7 @@ const rootQuery = new GraphQLObjectType({
       type: PlayerType,
       args: { id: { type: GraphQLString } },
       resolve(parent, args) {
-        // logic
+        // return Player.findById(args.id)
       }
     }
   }
