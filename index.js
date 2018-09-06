@@ -5,7 +5,7 @@ const schema = require('./graphql/schema');
 
 const Player = require('./models/player');
 
-mongoose.connect('mongodb://test:test1234@ds143262.mlab.com:43262/jfk-graphql');
+mongoose.connect('mongodb://test:test1234@ds143262.mlab.com:43262/jfk-graphql', { useNewUrlParser: true });
 
 mongoose.connection.once('open', () => {
   console.log('connected to the database');
@@ -17,6 +17,33 @@ const server = hapi.server({
 });
 
 const init = async () => {
+
+  await server.register({
+		plugin: graphiqlHapi,
+		options: {
+			path: '/graphiql',
+			graphiqlOptions: {
+				endpointURL: '/graphql'
+			},
+			route: {
+				cors: true
+			}
+		}
+	});
+
+	await server.register({
+		plugin: graphqlHapi,
+		options: {
+			path: '/graphql',
+			graphqlOptions: {
+				schema
+			},
+			route: {
+				cors: true
+			}
+		}
+	});
+
   server.route([
     {
       method: 'GET',
@@ -48,9 +75,21 @@ const init = async () => {
   ]);
 
 
-  await server.start();
+  try {
+    await server.start()
+  } catch (err) {
+    console.log(`Error while starting server: ${err.message}`)
+  }
+
   console.log(`server running at ${server.info.uri} `);
 };
+
+process.on('unHandledRejection', (err) => {
+	if (err) {
+		console.log(err);
+		process.exit(1);
+	}
+});
 
 init();
 
