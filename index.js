@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 1337;
 
 const server = hapi.server({
   port: PORT,
-  host: 'localhost'
+  host: '0.0.0.0'
 });
 
 const init = async () => {
